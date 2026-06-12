@@ -8,12 +8,22 @@
 
 {% block bar %}
 <nav>
-    <a href ="index.html">New Recipe Page</a>
-    <a href ="suggested_recipes.html">Suggested Recipe Page</a>
-    <a href ="favorites.html">Favorite Recipes</a>
+    <a href ="{{ url_for('home_page') }}">Home Page</a>
+    <a href ="{{ url_for('suggestions_page') }}">Suggested Recipe Page</a>
+    <a href ="{{ url_for('favorites_page') }}">Favorite Recipes</a>
+    <form action="#">
+        <input type="text" placeholder="Search">
+        
+        <!--create page for search results-->
+        <button onclick="">
+            <p>Search<p>
+        </button>
+    </form>
 </nav>
 {% endblock %}
 
 {% block content %}
+
+<h1>New Recipes</h1>
 
 {% endblock %}
