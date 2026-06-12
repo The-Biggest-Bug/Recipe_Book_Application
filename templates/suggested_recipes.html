@@ -1,11 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suggested Recipes</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block head %}
+{# Insert stylesheet #}
+{% endblock %}
+
+{% block title %}Recipe Book{% endblock %}
+
+{% block bar %}
+<nav>
+    <a href ="new_recipe.html">New Recipe Page</a>
+    <a href ="index.html">Suggested Recipe Page</a>
+    <a href ="favorites.html">Favorite Recipes</a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
