@@ -11,17 +11,9 @@
     <a href ="{{ url_for('home_page') }}">Home Page</a>
     <a href ="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
     <a href ="{{ url_for('favorites_page') }}">Favorite Recipes</a>
-    <form action="#">
-        <input type="text" placeholder="Search">
-        
-        <!--create page for search results-->
-        <button onclick="">
-            <p>Search<p>
-        </button>
-    </form>
 </nav>
 {% endblock %}
 
 {% block content %}
-<h1>Suggested Recipes</h1>
+<h1>Your History</h1>
 {% endblock %}
