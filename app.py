@@ -1,4 +1,5 @@
-from flask import Flask, render_template, url_for, request, jsonify, request, response
+from flask import Flask, render_template, url_for, jsonify, request
+import requests
 
 app = Flask(__name__)
 
@@ -10,17 +11,29 @@ def home_page():
         #Enter functionality form API for search function
         pass
 
-@app.route("/favorites")
+@app.route("/favorites", methods=['GET', 'POST', 'DELETE'])
 def favorites_page():
-    return render_template("favorites.html")
+    if request.method == 'GET':
+        return render_template("favorites.html")
+    if request.method == 'POST':
+        #Enter functionality form API for search function
+        pass
+    if request.method == 'DELETE':
+        #Enter functionality form API for search function
+        pass
 
-@app.route("/new-recipes")
+@app.route("/new-recipes", methods=['GET', 'POST'])
 def new_arrivals_page():
-    return render_template("new_recipes.html")
+    if request.method == 'GET':
+        return render_template("new_recipes.html")
+    if request.method == 'POST':
+        #Enter functionality form API for search function
+        pass
 
-@app.route("/suggestions")
-def suggestions_page():
-    return render_template("suggested_recipes.html")
+@app.route("/history", methods=['GET'])
+def history_page():
+    if request.method == 'GET':
+        return render_template("history.html")
 
 
 if __name__ == "__main__":

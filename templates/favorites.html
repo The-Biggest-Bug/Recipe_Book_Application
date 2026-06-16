@@ -10,18 +10,12 @@
 <nav>
     <a href ="{{ url_for('home_page') }}">Home Page</a>
     <a href ="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
-    <a href ="{{ url_for('suggestions_page') }}">Suggested Recipe Page</a>
-    <form action="#">
-        <input type="text" placeholder="Search">
-        
-        <!--create page for search results-->
-        <button onclick="">
-            <p>Search<p>
-        </button>
-    </form>
+    <a href ="{{ url_for('history_page') }}">Suggested Recipe Page</a>
 </nav>
 {% endblock %}
 
 {% block content %}
+
 <h1>Favorites</h1>
+
 {% endblock %}
