@@ -44,7 +44,7 @@ def new_arrivals_page():
 @app.route("/history", methods=['GET'])
 def history_page():
     if request.method == 'GET':
-        return render_template("history.html")
+        return render_template("index.html", recipes=recipes)
 
 
 if __name__ == "__main__":

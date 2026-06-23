@@ -1,22 +1,18 @@
 {% extends "base.html" %}
 
-{% block head %}
-{# Insert stylesheet #}
-{% endblock %}
-
 {% block title %}Recipe Book{% endblock %}
 
 {% block bar %}
 <nav>
-    <a href ="{{ url_for('history_page') }}">History Page</a>
-    <a href ="{{ url_for('favorites_page') }}">Favorite Recipes</a>
-    <a href ="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
+    <a href="{{ url_for('history_page') }}">History Page</a>
+    <a href="{{ url_for('favorites_page') }}">Favorite Recipes</a>
+    <a href="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
+
     <form action="#">
         <input type="text" placeholder="Search">
-        
-        <!--create page for search results-->
+
         <button onclick="">
-            <p>Search<p>
+            <p>Search</p>
         </button>
     </form>
 </nav>
@@ -24,7 +20,17 @@
 
 {% block content %}
 
-<h1>Home Page</h1>
+<h1>Available Recipes</h1>
+
+<ul>
+{% if recipes %}
+    {% for recipe in recipes %}
+        <li>{{ recipe.strMeal }}</li>
+    {% endfor %}
+{% else %}
+    <p>No recipes found</p>
+{% endif %}
+</ul>
 
 <p>{{data}}</p>
 
