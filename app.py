@@ -7,19 +7,13 @@ app = Flask(__name__)
 @app.route("/", methods=['GET', 'POST'])
 def home_page():
     if request.method == 'GET':
-        '''
-        try:
-            #FIX THIS JSON SERIALIZATION AREA: 12-20!!!
-            response_a = requests.get("https://www.themealdb.com/api/json/v1/1/search.php?f=a")
-            response_a.raise_for_status()
-            data = response_a.json().get("meals")
-            nested_value = data[0]["strMeal"]
-        except requests.exceptions.HTTPError as http_err:
-            return jsonify({'error': f'HTTP error occurred: {http_err}'}), 500
-        except Exception as err:
-            return jsonify({'error': f'Other error occurred: {err}'}), 500
-            '''
-        return render_template("index.html")
+        response_a = requests.get("https://www.themealdb.com/api/json/v1/1/search.php?f=a")
+        recipes_A= response_a.json().get('meals', [])
+        response_b = requests.get("https://www.themealdb.com/api/json/v1/1/search.php?f=b")
+        recipes_B = response_b.json().get('meals', [])
+        response_c = requests.get("https://www.themealdb.com/api/json/v1/1/search.php?f=c")
+        recipes_C = response_c.json().get('meals', [])
+        return render_template('index.html', recipes_a=recipes_A, recipes_b=recipes_B, recipes_c=recipes_C)
     if request.method == 'POST':
         #Enter functionality form API for search function
         pass
@@ -46,7 +40,7 @@ def new_arrivals_page():
 @app.route("/history", methods=['GET'])
 def history_page():
     if request.method == 'GET':
-        return render_template("index.html", recipes=recipes)
+        return render_template("history.html")
 
 
 if __name__ == "__main__":

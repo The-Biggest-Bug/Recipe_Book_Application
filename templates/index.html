@@ -23,15 +23,19 @@
 <h1>Available Recipes</h1>
 
 <ul>
-{% if recipes %}
-    {% for recipe in recipes %}
+{% if true %}
+    {% for recipe in recipes_a %}
+        <li>{{ recipe.strMeal }}</li>
+    {% endfor %}
+    {% for recipe in recipes_b %}
+        <li>{{ recipe.strMeal }}</li>
+    {% endfor %}
+    {% for recipe in recipes_c %}
         <li>{{ recipe.strMeal }}</li>
     {% endfor %}
 {% else %}
     <p>No recipes found</p>
 {% endif %}
 </ul>
-
-<p>{{data}}</p>
 
 {% endblock %}
