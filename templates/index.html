@@ -25,13 +25,13 @@
 <ul>
 {% if true %}
     {% for recipe in recipes_a %}
-        <li>{{ recipe.strMeal }}</li>
+        <li><a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">{{ recipe.strMeal }}</a></li>
     {% endfor %}
     {% for recipe in recipes_b %}
-        <li>{{ recipe.strMeal }}</li>
+        <li><a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">{{ recipe.strMeal }}</a></li>
     {% endfor %}
     {% for recipe in recipes_c %}
-        <li>{{ recipe.strMeal }}</li>
+        <li><a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">{{ recipe.strMeal }}</a></li>
     {% endfor %}
 {% else %}
     <p>No recipes found</p>
