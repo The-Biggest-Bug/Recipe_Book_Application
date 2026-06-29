@@ -32,6 +32,33 @@ nav a:hover {
     border-radius: 4px;
 }
 
+nav form {
+    display: inline-flex;
+    gap: 8px;
+    margin-left: 15px;
+    vertical-align: middle;
+}
+
+nav input {
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+nav button {
+    background-color: #667eea;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    padding: 10px 15px;
+}
+
+nav button p {
+    color: white;
+    margin: 0;
+}
+
 #content {
     background: white;
     border-radius: 12px;
@@ -77,6 +104,10 @@ li a {
 p {
     text-align: center;
     color: #999;
+}
+
+.search-summary {
+    margin-bottom: 20px;
 }
 
 h2 {

@@ -19,19 +19,46 @@ def get_recipe_ingredients(recipe):
 
     return ingredients
 
+def get_default_recipes():
+    recipes = []
+
+    for letter in ["a", "b", "c"]:
+        response = requests.get(f"https://www.themealdb.com/api/json/v1/1/search.php?f={letter}")
+        recipes.extend(response.json().get('meals') or [])
+
+    return recipes
+
+def search_recipes_by_ingredients(search_text):
+    ingredients = [
+        ingredient.strip().replace(" ", "_")
+        for ingredient in search_text.split(",")
+        if ingredient.strip()
+    ]
+    recipes_by_id = {}
+
+    for ingredient in ingredients:
+        response = requests.get(f"https://www.themealdb.com/api/json/v1/1/filter.php?i={ingredient}")
+        meals = response.json().get('meals') or []
+
+        for meal in meals:
+            recipes_by_id[meal["idMeal"]] = meal
+
+    return list(recipes_by_id.values())
+
 @app.route("/", methods=['GET', 'POST'])
 def home_page():
-    if request.method == 'GET':
-        response_a = requests.get("https://www.themealdb.com/api/json/v1/1/search.php?f=a")
-        recipes_A= response_a.json().get('meals', [])
-        response_b = requests.get("https://www.themealdb.com/api/json/v1/1/search.php?f=b")
-        recipes_B = response_b.json().get('meals', [])
-        response_c = requests.get("https://www.themealdb.com/api/json/v1/1/search.php?f=c")
-        recipes_C = response_c.json().get('meals', [])
-        return render_template('index.html', recipes_a=recipes_A, recipes_b=recipes_B, recipes_c=recipes_C)
     if request.method == 'POST':
-        #Enter functionality form API for search function
-        pass
+        search_text = request.form.get("ingredients", "")
+        recipes = search_recipes_by_ingredients(search_text)
+        return render_template(
+            'index.html',
+            recipes=recipes,
+            search_text=search_text,
+            searched=True
+        )
+
+    recipes = get_default_recipes()
+    return render_template('index.html', recipes=recipes, search_text="", searched=False)
 
 @app.route("/recipe/<recipe_id>", methods=['GET'])
 def recipe_detail_page(recipe_id):
