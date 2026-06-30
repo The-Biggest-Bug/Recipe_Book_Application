@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Recipe Details{% endblock %}
+
+{% block bar %}
+<nav>
+    <a href="{{ url_for('home_page') }}">Home Page</a>
+    <a href="{{ url_for('favorites_page') }}">Favorite Recipes</a>
+    <a href="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
+    <a href="{{ url_for('history_page') }}">History Page</a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+{% if recipe %}
+    <h1>{{ recipe.strMeal }}</h1>
+
+    <div class="recipe-details">
+        {% if recipe.strMealThumb %}
+            <img class="recipe-image" src="{{ recipe.strMealThumb }}" alt="{{ recipe.strMeal }}">
+        {% endif %}
+
+        <div class="recipe-meta">
+            {% if recipe.strCategory %}
+                <p><strong>Category:</strong> {{ recipe.strCategory }}</p>
+            {% endif %}
+            {% if recipe.strArea %}
+                <p><strong>Cuisine:</strong> {{ recipe.strArea }}</p>
+            {% endif %}
+        </div>
+
+        <h2>Ingredients</h2>
+        <ul class="ingredients-list">
+            {% for ingredient in ingredients %}
+                <li>
+                    {% if ingredient.measurement %}
+                        {{ ingredient.measurement }}
+                    {% endif %}
+                    {{ ingredient.name }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Instructions</h2>
+        <p class="instructions">{{ recipe.strInstructions }}</p>
+
+        <div class="recipe-links">
+            {% if recipe.strYoutube %}
+                <a href="{{ recipe.strYoutube }}" target="_blank">Watch Video</a>
+            {% endif %}
+            {% if recipe.strSource %}
+                <a href="{{ recipe.strSource }}" target="_blank">Original Source</a>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <h1>Recipe Not Found</h1>
+    <p>Sorry, this recipe could not be found.</p>
+{% endif %}
+
+{% endblock %}

@@ -4,6 +4,21 @@ import json
 
 app = Flask(__name__)
 
+def get_recipe_ingredients(recipe):
+    ingredients = []
+
+    for number in range(1, 21):
+        ingredient = recipe.get(f"strIngredient{number}")
+        measurement = recipe.get(f"strMeasure{number}")
+
+        if ingredient and ingredient.strip():
+            ingredients.append({
+                "name": ingredient.strip(),
+                "measurement": measurement.strip() if measurement else ""
+            })
+
+    return ingredients
+
 @app.route("/", methods=['GET', 'POST'])
 def home_page():
     if request.method == 'GET':
@@ -17,6 +32,18 @@ def home_page():
     if request.method == 'POST':
         #Enter functionality form API for search function
         pass
+
+@app.route("/recipe/<recipe_id>", methods=['GET'])
+def recipe_detail_page(recipe_id):
+    response = requests.get(f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={recipe_id}")
+    meals = response.json().get('meals') or []
+    recipe = meals[0] if meals else None
+
+    if recipe is None:
+        return render_template("recipe_detail.html", recipe=None, ingredients=[])
+
+    ingredients = get_recipe_ingredients(recipe)
+    return render_template("recipe_detail.html", recipe=recipe, ingredients=ingredients)
 
 @app.route("/favorites", methods=['GET', 'POST', 'DELETE'])
 def favorites_page():

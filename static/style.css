@@ -78,3 +78,54 @@ p {
     text-align: center;
     color: #999;
 }
+
+h2 {
+    color: #333;
+    margin: 25px 0 15px;
+}
+
+.recipe-details {
+    color: #333;
+}
+
+.recipe-image {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 8px;
+    margin: 0 auto 25px;
+}
+
+.recipe-meta {
+    margin-bottom: 20px;
+}
+
+.recipe-meta p,
+.instructions {
+    color: #333;
+    text-align: left;
+    line-height: 1.6;
+}
+
+.ingredients-list li {
+    cursor: default;
+}
+
+.ingredients-list li:hover {
+    transform: none;
+}
+
+.recipe-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+.recipe-links a {
+    background-color: #667eea;
+    border-radius: 6px;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+}
