@@ -8,10 +8,10 @@
     <a href="{{ url_for('favorites_page') }}">Favorite Recipes</a>
     <a href="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
 
-    <form action="#">
-        <input type="text" placeholder="Search">
+    <form action="{{ url_for('home_page') }}" method="POST">
+        <input type="text" name="ingredients" placeholder="Search ingredients" value="{{ search_text }}">
 
-        <button onclick="">
+        <button type="submit">
             <p>Search</p>
         </button>
     </form>
@@ -20,17 +20,16 @@
 
 {% block content %}
 
-<h1>Available Recipes</h1>
+{% if searched %}
+    <h1>Search Results</h1>
+    <p class="search-summary">Showing recipes for: {{ search_text }}</p>
+{% else %}
+    <h1>Available Recipes</h1>
+{% endif %}
 
 <ul>
-{% if true %}
-    {% for recipe in recipes_a %}
-        <li><a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">{{ recipe.strMeal }}</a></li>
-    {% endfor %}
-    {% for recipe in recipes_b %}
-        <li><a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">{{ recipe.strMeal }}</a></li>
-    {% endfor %}
-    {% for recipe in recipes_c %}
+{% if recipes %}
+    {% for recipe in recipes %}
         <li><a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">{{ recipe.strMeal }}</a></li>
     {% endfor %}
 {% else %}
