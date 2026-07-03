@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, jsonify, request
+from flask import Flask, render_template, url_for, jsonify, request, redirect
 import requests
 import json
 
@@ -49,16 +49,21 @@ def search_recipes_by_ingredients(search_text):
 def home_page():
     if request.method == 'POST':
         search_text = request.form.get("ingredients", "")
-        recipes = search_recipes_by_ingredients(search_text)
-        return render_template(
-            'index.html',
-            recipes=recipes,
-            search_text=search_text,
-            searched=True
-        )
+        return redirect(url_for("search_results_page", ingredients=search_text))
 
     recipes = get_default_recipes()
     return render_template('index.html', recipes=recipes, search_text="", searched=False)
+
+@app.route("/search-results", methods=['GET'])
+def search_results_page():
+    search_text = request.args.get("ingredients", "")
+    recipes = search_recipes_by_ingredients(search_text)
+
+    return render_template(
+        "search_results.html",
+        recipes=recipes,
+        search_text=search_text
+    )
 
 @app.route("/recipe/<recipe_id>", methods=['GET'])
 def recipe_detail_page(recipe_id):

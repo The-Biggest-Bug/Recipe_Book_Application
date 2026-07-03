@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block bar %}
+<nav>
+    <a href="{{ url_for('home_page') }}">Home Page</a>
+    <a href="{{ url_for('history_page') }}">History Page</a>
+    <a href="{{ url_for('favorites_page') }}">Favorite Recipes</a>
+    <a href="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
+
+    <form action="{{ url_for('home_page') }}" method="POST">
+        <input type="text" name="ingredients" placeholder="Search ingredients" value="{{ search_text }}">
+
+        <button type="submit">
+            <p>Search</p>
+        </button>
+    </form>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<h1>Search Results</h1>
+
+{% if search_text %}
+    <p class="search-summary">Showing recipes for: {{ search_text }}</p>
+{% endif %}
+
+<ul>
+{% if recipes %}
+    {% for recipe in recipes %}
+        <li>
+            <a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">
+                {{ recipe.strMeal }}
+            </a>
+        </li>
+    {% endfor %}
+{% else %}
+    <p>No recipes found</p>
+{% endif %}
+</ul>
+
+{% endblock %}
