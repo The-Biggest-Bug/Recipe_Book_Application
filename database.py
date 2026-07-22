@@ -1,8 +1,10 @@
+import os
 import sqlite3
+
 from flask import g
 
 
-DATABASE = "users.db"
+DATABASE = os.environ.get("DATABASE_PATH", "users.db")
 
 
 def get_db():
@@ -148,6 +150,15 @@ def get_user_favorites(user_id):
         """,
         (user_id,)
     ).fetchall()
+
+
+def get_user_favorite_ids(user_id):
+    rows = get_db().execute(
+        "SELECT recipe_id FROM favorites WHERE user_id = ?",
+        (user_id,)
+    ).fetchall()
+
+    return {row["recipe_id"] for row in rows}
 
 
 def is_recipe_favorite(user_id, recipe_id):

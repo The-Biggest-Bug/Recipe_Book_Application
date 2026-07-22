@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% from "_recipe_card.html" import recipe_card with context %}
+
+{% block title %}Browse Recipes{% endblock %}
+
+{% block content %}
+
+<h1>Browse Recipes</h1>
+
+<div class="browse-filters">
+    <form action="{{ url_for('browse_page') }}" method="GET">
+        <label for="category">Category</label>
+        <select name="category" id="category" onchange="this.form.submit()">
+            <option value="">Choose a category&hellip;</option>
+            {% for option in categories %}
+                <option value="{{ option }}" {% if option == category %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+        </select>
+        <noscript><button type="submit">Go</button></noscript>
+    </form>
+
+    <form action="{{ url_for('browse_page') }}" method="GET">
+        <label for="area">Cuisine</label>
+        <select name="area" id="area" onchange="this.form.submit()">
+            <option value="">Choose a cuisine&hellip;</option>
+            {% for option in areas %}
+                <option value="{{ option }}" {% if option == area %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+        </select>
+        <noscript><button type="submit">Go</button></noscript>
+    </form>
+</div>
+
+{% if category or area %}
+    <p class="search-summary">
+        Showing recipes for: {{ category or area }}
+        {% if total_results %}({{ total_results }} found){% endif %}
+    </p>
+{% endif %}
+
+{% if recipes %}
+    <div class="recipe-grid">
+        {% for recipe in recipes %}
+            {{ recipe_card(
+                recipe.idMeal,
+                recipe.strMeal,
+                recipe.strMealThumb,
+                recipe.strCategory,
+                recipe.strArea,
+                is_favorite=recipe.idMeal in favorite_ids,
+                next_url=request.full_path
+            ) }}
+        {% endfor %}
+    </div>
+
+    {% if total_pages > 1 %}
+        <nav class="pagination">
+            {% if page > 1 %}
+                <a href="{{ url_for('browse_page', category=category, area=area, page=page - 1) }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page }} of {{ total_pages }}</span>
+            {% if page < total_pages %}
+                <a href="{{ url_for('browse_page', category=category, area=area, page=page + 1) }}">Next</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% elif api_error %}
+    <p class="empty-state">Browsing is unavailable right now. Please try again soon.</p>
+{% elif category or area %}
+    <p class="empty-state">No recipes found for that filter.</p>
+{% else %}
+    <p class="empty-state">Pick a category or cuisine above to browse recipes.</p>
+{% endif %}
+
+{% endblock %}

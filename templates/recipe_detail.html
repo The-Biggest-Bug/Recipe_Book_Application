@@ -25,11 +25,14 @@
             <div class="recipe-actions">
                 {% if is_favorite %}
                     <form action="{{ url_for('remove_favorite_page', recipe_id=recipe.idMeal) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="next" value="{{ request.path }}">
                         <button class="secondary-button" type="submit">Remove from Favorites</button>
                     </form>
                 {% else %}
                     <form action="{{ url_for('add_favorite_page', recipe_id=recipe.idMeal) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="next" value="{{ request.path }}">
                         <button type="submit">Save to Favorites</button>
                     </form>
                 {% endif %}

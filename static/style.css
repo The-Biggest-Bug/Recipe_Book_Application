@@ -386,6 +386,67 @@ h2 {
     text-decoration: none;
 }
 
+.field-hint {
+    color: #777;
+    font-size: 0.85em;
+    margin-top: -6px;
+    text-align: left;
+}
+
+.browse-filters {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.browse-filters form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.browse-filters label {
+    color: #333;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.browse-filters select {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1em;
+    min-width: 220px;
+    background: white;
+}
+
+.pagination {
+    align-items: center;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.pagination a {
+    background-color: #667eea;
+    border-radius: 6px;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    background-color: #5568d3;
+}
+
+.pagination span {
+    color: #555;
+}
+
 @media (max-width: 700px) {
     body {
         padding: 12px;

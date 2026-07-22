@@ -1,10 +1,12 @@
 {% extends "base.html" %}
+{% from "_recipe_card.html" import recipe_card with context %}
 
 {% block title %}Search Results{% endblock %}
 
 {% block content %}
 <div class="search-panel">
     <form action="{{ url_for('home_page') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input
             type="text"
             name="search_text"
@@ -33,23 +35,42 @@
         {% else %}
             by ingredients
         {% endif %}
+        {% if total_results %}
+            ({{ total_results }} found)
+        {% endif %}
     </p>
 {% endif %}
 
-<ul>
 {% if recipes %}
-    {% for recipe in recipes %}
-        <li>
-            <a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">
-                {{ recipe.strMeal }}
-            </a>
-        </li>
-    {% endfor %}
+    <div class="recipe-grid">
+        {% for recipe in recipes %}
+            {{ recipe_card(
+                recipe.idMeal,
+                recipe.strMeal,
+                recipe.strMealThumb,
+                recipe.strCategory,
+                recipe.strArea,
+                is_favorite=recipe.idMeal in favorite_ids,
+                next_url=request.full_path
+            ) }}
+        {% endfor %}
+    </div>
+
+    {% if total_pages > 1 %}
+        <nav class="pagination">
+            {% if page > 1 %}
+                <a href="{{ url_for('search_results_page', search_text=search_text, search_type=search_type, page=page - 1) }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page }} of {{ total_pages }}</span>
+            {% if page < total_pages %}
+                <a href="{{ url_for('search_results_page', search_text=search_text, search_type=search_type, page=page + 1) }}">Next</a>
+            {% endif %}
+        </nav>
+    {% endif %}
 {% elif api_error %}
     <p class="empty-state">No recipes were found for that search, or the recipe service is unavailable.</p>
 {% else %}
     <p class="empty-state">Enter a recipe name or ingredients to search for recipes.</p>
 {% endif %}
-</ul>
 
 {% endblock %}

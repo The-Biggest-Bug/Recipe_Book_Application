@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_recipe_card.html" import recipe_card with context %}
 
 {% block title %}Recipe Book{% endblock %}
 
@@ -9,22 +10,15 @@
 {% if recipes %}
     <div class="recipe-grid">
         {% for recipe in recipes %}
-            <article class="recipe-card">
-                {% if recipe.strMealThumb %}
-                    <img src="{{ recipe.strMealThumb }}" alt="{{ recipe.strMeal }}">
-                {% endif %}
-                <div class="recipe-card-content">
-                    <h2>{{ recipe.strMeal }}</h2>
-                    <p>
-                        {% if recipe.strCategory %}{{ recipe.strCategory }}{% endif %}
-                        {% if recipe.strCategory and recipe.strArea %} &middot; {% endif %}
-                        {% if recipe.strArea %}{{ recipe.strArea }}{% endif %}
-                    </p>
-                    <div class="card-actions">
-                        <a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">View Recipe</a>
-                    </div>
-                </div>
-            </article>
+            {{ recipe_card(
+                recipe.idMeal,
+                recipe.strMeal,
+                recipe.strMealThumb,
+                recipe.strCategory,
+                recipe.strArea,
+                is_favorite=recipe.idMeal in favorite_ids,
+                next_url=request.path
+            ) }}
         {% endfor %}
     </div>
 {% elif api_error %}

@@ -7,6 +7,7 @@
 
 {% if searches %}
     <form class="inline-action-form" action="{{ url_for('clear_history_page') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button class="secondary-button" type="submit">Clear History</button>
     </form>
 
