@@ -2,24 +2,35 @@
 
 {% block title %}Recipe Book{% endblock %}
 
-{% block bar %}
-<nav>
-    <a href ="{{ url_for('home_page') }}">Home Page</a>
-    <a href ="{{ url_for('history_page') }}">History Page</a>
-    <a href ="{{ url_for('favorites_page') }}">Favorite Recipes</a>
-    <form action="#">
-        <input type="text" placeholder="Search">
-        
-        <!--create page for search results-->
-        <button onclick="">
-            <p>Search<p>
-        </button>
-    </form>
-</nav>
-{% endblock %}
-
 {% block content %}
 
 <h1>New Recipes</h1>
+
+{% if recipes %}
+    <div class="recipe-grid">
+        {% for recipe in recipes %}
+            <article class="recipe-card">
+                {% if recipe.strMealThumb %}
+                    <img src="{{ recipe.strMealThumb }}" alt="{{ recipe.strMeal }}">
+                {% endif %}
+                <div class="recipe-card-content">
+                    <h2>{{ recipe.strMeal }}</h2>
+                    <p>
+                        {% if recipe.strCategory %}{{ recipe.strCategory }}{% endif %}
+                        {% if recipe.strCategory and recipe.strArea %} &middot; {% endif %}
+                        {% if recipe.strArea %}{{ recipe.strArea }}{% endif %}
+                    </p>
+                    <div class="card-actions">
+                        <a href="{{ url_for('recipe_detail_page', recipe_id=recipe.idMeal) }}">View Recipe</a>
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% elif api_error %}
+    <p class="empty-state">New recipes are unavailable right now. Please try again soon.</p>
+{% else %}
+    <p class="empty-state">No new recipes are available right now.</p>
+{% endif %}
 
 {% endblock %}

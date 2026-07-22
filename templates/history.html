@@ -1,17 +1,33 @@
-#testing branch commit
-
 {% extends "base.html" %}
 
 {% block title %}Recipe Book{% endblock %}
 
-{% block bar %}
-<nav>
-    <a href ="{{ url_for('home_page') }}">Home Page</a>
-    <a href ="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
-    <a href ="{{ url_for('favorites_page') }}">Favorite Recipes</a>
-</nav>
-{% endblock %}
-
 {% block content %}
 <h1>Your History</h1>
+
+{% if searches %}
+    <form class="inline-action-form" action="{{ url_for('clear_history_page') }}" method="POST">
+        <button class="secondary-button" type="submit">Clear History</button>
+    </form>
+
+    <ul class="history-list">
+        {% for search in searches %}
+            <li>
+                <a href="{{ url_for('search_results_page', search_text=search.search_text, search_type=search.search_type) }}">
+                    {{ search.search_text }}
+                </a>
+                <span>
+                    {% if search.search_type == "name" %}
+                        Recipe Name
+                    {% else %}
+                        Ingredients
+                    {% endif %}
+                    | {{ search.created_at }}
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="empty-state">Your recipe and ingredient searches will appear here.</p>
+{% endif %}
 {% endblock %}

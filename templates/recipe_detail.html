@@ -2,15 +2,6 @@
 
 {% block title %}Recipe Details{% endblock %}
 
-{% block bar %}
-<nav>
-    <a href="{{ url_for('home_page') }}">Home Page</a>
-    <a href="{{ url_for('favorites_page') }}">Favorite Recipes</a>
-    <a href="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
-    <a href="{{ url_for('history_page') }}">History Page</a>
-</nav>
-{% endblock %}
-
 {% block content %}
 
 {% if recipe %}
@@ -29,6 +20,26 @@
                 <p><strong>Cuisine:</strong> {{ recipe.strArea }}</p>
             {% endif %}
         </div>
+
+        {% if current_user %}
+            <div class="recipe-actions">
+                {% if is_favorite %}
+                    <form action="{{ url_for('remove_favorite_page', recipe_id=recipe.idMeal) }}" method="POST">
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button class="secondary-button" type="submit">Remove from Favorites</button>
+                    </form>
+                {% else %}
+                    <form action="{{ url_for('add_favorite_page', recipe_id=recipe.idMeal) }}" method="POST">
+                        <button type="submit">Save to Favorites</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="auth-switch">
+                <a href="{{ url_for('login_page', next=request.path) }}">Log in</a>
+                to save this recipe to your favorites.
+            </p>
+        {% endif %}
 
         <h2>Ingredients</h2>
         <ul class="ingredients-list">
@@ -56,7 +67,7 @@
     </div>
 {% else %}
     <h1>Recipe Not Found</h1>
-    <p>Sorry, this recipe could not be found.</p>
+    <p class="empty-state">Sorry, this recipe could not be found.</p>
 {% endif %}
 
 {% endblock %}

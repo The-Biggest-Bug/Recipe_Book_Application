@@ -2,16 +2,37 @@
 
 {% block title %}Recipe Book{% endblock %}
 
-{% block bar %}
-<nav>
-    <a href ="{{ url_for('home_page') }}">Home Page</a>
-    <a href ="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
-    <a href ="{{ url_for('history_page') }}">History Page</a>
-</nav>
-{% endblock %}
-
 {% block content %}
 
 <h1>Favorites</h1>
+
+{% if favorites %}
+    <div class="recipe-grid">
+        {% for favorite in favorites %}
+            <article class="recipe-card">
+                {% if favorite.thumbnail %}
+                    <img src="{{ favorite.thumbnail }}" alt="{{ favorite.recipe_name }}">
+                {% endif %}
+                <div class="recipe-card-content">
+                    <h2>{{ favorite.recipe_name }}</h2>
+                    <p>
+                        {% if favorite.category %}{{ favorite.category }}{% endif %}
+                        {% if favorite.category and favorite.area %} &middot; {% endif %}
+                        {% if favorite.area %}{{ favorite.area }}{% endif %}
+                    </p>
+                    <div class="card-actions">
+                        <a href="{{ url_for('recipe_detail_page', recipe_id=favorite.recipe_id) }}">View Recipe</a>
+                        <form action="{{ url_for('remove_favorite_page', recipe_id=favorite.recipe_id) }}" method="POST">
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <button class="secondary-button" type="submit">Remove</button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="empty-state">Your saved recipes will appear here.</p>
+{% endif %}
 
 {% endblock %}

@@ -10,7 +10,38 @@
     {% endblock %}
 </head>
 <body>
-    <div id="bar">{% block bar %}{% endblock %}</div>
+    <div id="bar">
+        <nav>
+            <div class="nav-links">
+                <a href="{{ url_for('home_page') }}">Home Page</a>
+                <a href="{{ url_for('history_page') }}">History Page</a>
+                <a href="{{ url_for('favorites_page') }}">Favorite Recipes</a>
+                <a href="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
+            </div>
+
+            <div class="nav-actions">
+                {% if current_user %}
+                    <a href="{{ url_for('profile_page') }}">Profile</a>
+                    <span class="welcome-message">Signed in as {{ current_user.username }}</span>
+                    <a href="{{ url_for('logout_page') }}">Log Out</a>
+                {% else %}
+                    <a href="{{ url_for('login_page') }}">Log In</a>
+                    <a href="{{ url_for('register_page') }}">Register</a>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <div id="content">{% block content %}{% endblock %}</div>
     <div id="footer">{% block footer %}{% endblock %}</div>
 </body>

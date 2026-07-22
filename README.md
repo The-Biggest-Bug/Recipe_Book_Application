@@ -1,10 +1,26 @@
 # Recipe Book Application
 
+## Features:
+- Search for recipes by ingredients using TheMealDB.
+- Create a user account, log in, and log out.
+- Save recipes to a personal favorites list.
+- Track ingredient search history for each logged-in user.
+- View a user profile with account stats.
+- Change account password.
+- Browse random new recipe suggestions.
+
 ## How to use:
 ### 1.Clone Repo: git clone <repo link>
 ### 2.Navigate to app.py file
 ### 3a.If using VScode, press the run button
 ### 3b.If using command line, type "flask run" within your terminal
+
+## Project Structure:
+- `app.py` contains the Flask routes.
+- `database.py` contains SQLite setup and database helper functions.
+- `mealdb.py` contains TheMealDB API helper functions.
+- `templates/` contains the HTML pages.
+- `static/style.css` contains the app styling.
 <hr>
 
 # Branching Strategy
