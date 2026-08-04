@@ -1,178 +1,170 @@
-*  {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* =========================================
+   RECIPE BOOK WEBSITE
+   ========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #fff8f1 0%, #ffe8da 100%);
     min-height: 100vh;
-    padding: 20px;
+    color: #4b3832;
+}
+
+
+/* =========================================
+   NAVIGATION
+   ========================================= */
+
+#bar {
+    width: 100%;
+    background: white;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 nav {
-    background-color: #333;
-    padding: 15px;
-    margin-bottom: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 15px 25px;
+
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    flex-wrap: wrap;
+    gap: 12px;
+
+    background: white;
 }
 
 nav a {
-    color: white;
+    color: #6d4c41;
     text-decoration: none;
-    padding: 10px 20px;
-    display: inline-block;
-    transition: background-color 0.3s;
+    font-size: 16px;
+    font-weight: 600;
+
+    padding: 10px 17px;
+    border-radius: 25px;
+
+    transition: all 0.25s ease;
 }
 
 nav a:hover {
-    background-color: #667eea;
-    border-radius: 4px;
+    background: #ff9f68;
+    color: white;
+    transform: translateY(-2px);
 }
 
-.nav-links,
-.nav-actions {
+
+/* =========================================
+   SEARCH BAR
+   ========================================= */
+
+nav form {
     display: flex;
     align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    gap: 8px;
+    margin-left: 10px;
 }
 
-.welcome-message {
-    color: #f8f9fa;
-    font-size: 0.95em;
-    padding: 10px 12px;
+nav input {
+    width: 210px;
+
+    padding: 10px 16px;
+
+    border: 2px solid #ffd2b8;
+    border-radius: 25px;
+
+    background: #fffdfb;
+    color: #4b3832;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: all 0.25s ease;
 }
 
-.flash-messages {
-    max-width: 900px;
-    margin: 0 auto 20px;
+nav input::placeholder {
+    color: #a78d82;
 }
 
-.flash-messages p {
-    background: #fff3cd;
-    border: 1px solid #ffe69c;
-    border-radius: 8px;
-    color: #664d03;
-    margin-bottom: 8px;
-    padding: 12px 16px;
-    text-align: left;
+nav input:focus {
+    border-color: #ff9f68;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 159, 104, 0.15);
 }
 
-.search-panel {
-    margin-bottom: 30px;
-}
-
-.search-panel form {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.search-panel input,
-.search-panel select {
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 1em;
-}
-
-.search-panel input {
-    width: min(100%, 360px);
-}
-
-.search-panel select {
-    background: white;
-    color: #333;
-}
-
-.search-panel button,
-.auth-form button,
-.recipe-actions button,
-.card-actions button,
-.inline-action-form button {
-    background-color: #667eea;
-    border: none;
-    border-radius: 4px;
+nav button {
+    background: #ff9f68;
     color: white;
-    cursor: pointer;
-    padding: 10px 15px;
+
+    border: none;
+    border-radius: 25px;
+
+    padding: 11px 19px;
+
+    font-size: 15px;
     font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
 }
 
-.search-panel button:hover,
-.auth-form button:hover,
-.recipe-actions button:hover,
-.card-actions button:hover,
-.inline-action-form button:hover {
-    background-color: #5568d3;
+nav button:hover {
+    background: #e97845;
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 12px rgba(233, 120, 69, 0.25);
 }
 
-.secondary-button {
-    background-color: #6c757d !important;
+nav button p {
+    margin: 0;
+    color: white;
 }
 
-.secondary-button:hover {
-    background-color: #5c636a !important;
-}
+
+/* =========================================
+   MAIN CONTENT
+   ========================================= */
 
 #content {
-    background: white;
-    border-radius: 12px;
+    width: calc(100% - 40px);
+    max-width: 1000px;
+
+    margin: 40px auto;
     padding: 40px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    max-width: 900px;
-    margin: 0 auto;
+
+    background: rgba(255, 255, 255, 0.96);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 12px 35px rgba(89, 56, 45, 0.10);
 }
+
+
+/* =========================================
+   HEADINGS
+   ========================================= */
 
 h1 {
-    color: #333;
+    color: #d9631e;
+
+    text-align: center;
+
+    font-size: 2.7rem;
+    font-weight: 700;
+
     margin-bottom: 30px;
-    text-align: center;
-    font-size: 2.5em;
-}
-
-ul {
-    list-style: none;
-}
-
-li {
-    background: #f8f9fa;
-    padding: 15px 20px;
-    margin-bottom: 15px;
-    border-left: 4px solid #667eea;
-    border-radius: 6px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-}
-
-li:hover {
-    transform: translateX(5px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-}
-
-li a {
-    color: #333;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1.1em;
-}
-
-p {
-    text-align: center;
-    color: #999;
-}
-
-.search-summary {
-    margin-bottom: 20px;
 }
 
 .auth-form {
@@ -336,176 +328,321 @@ p {
 }
 
 h2 {
-    color: #333;
-    margin: 25px 0 15px;
+    color: #754b3b;
+
+    font-size: 1.6rem;
+
+    margin: 28px 0 15px;
 }
 
+
+/* =========================================
+   GENERAL TEXT
+   ========================================= */
+
+p {
+    color: #715c54;
+
+    font-size: 16px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   RECIPE LIST
+   ========================================= */
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #fffaf6;
+
+    margin-bottom: 18px;
+
+    padding: 20px 24px;
+
+    border-radius: 15px;
+
+    border-left: 6px solid #ff9f68;
+
+    box-shadow:
+        0 5px 15px rgba(89, 56, 45, 0.07);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+li:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 10px 22px rgba(89, 56, 45, 0.13);
+}
+
+li a {
+    display: block;
+
+    color: #59382d;
+
+    text-decoration: none;
+
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   SEARCH RESULTS
+   ========================================= */
+
+.search-summary {
+    text-align: center;
+
+    color: #846d64;
+
+    background: #fff5ed;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================================
+   RECIPE DETAILS
+   ========================================= */
+
 .recipe-details {
-    color: #333;
+    color: #4a342e;
 }
 
 .recipe-image {
     display: block;
+
     width: 100%;
-    max-width: 420px;
-    border-radius: 8px;
-    margin: 0 auto 25px;
+    max-width: 500px;
+
+    margin: 20px auto 30px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 25px rgba(89, 56, 45, 0.18);
 }
 
 .recipe-meta {
-    margin-bottom: 20px;
+    background: #fff4eb;
+
+    padding: 22px;
+
+    border-radius: 16px;
+
+    margin-bottom: 25px;
+
+    border: 1px solid #ffe0cf;
 }
 
-.recipe-meta p,
-.instructions {
-    color: #333;
+.recipe-meta p {
+    color: #5d4941;
+
     text-align: left;
-    line-height: 1.6;
+
+    line-height: 1.8;
+}
+
+.instructions {
+    color: #5d4941;
+
+    text-align: left;
+
+    line-height: 1.8;
+
+    background: #fffaf6;
+
+    padding: 20px;
+
+    border-radius: 15px;
+}
+
+
+/* =========================================
+   INGREDIENTS
+   ========================================= */
+
+.ingredients-list {
+    margin-top: 15px;
 }
 
 .ingredients-list li {
+    background: #fffaf6;
+
+    border-left-color: #f4b183;
+
     cursor: default;
 }
 
 .ingredients-list li:hover {
     transform: none;
+
+    box-shadow:
+        0 5px 15px rgba(89, 56, 45, 0.07);
 }
+
+
+/* =========================================
+   RECIPE LINKS / BUTTONS
+   ========================================= */
 
 .recipe-links {
     display: flex;
-    gap: 15px;
+
+    gap: 12px;
+
     flex-wrap: wrap;
-    margin-top: 25px;
-}
 
-.recipe-links a {
-    background-color: #667eea;
-    border-radius: 6px;
-    color: white;
-    padding: 10px 15px;
-    text-decoration: none;
-}
-
-.field-hint {
-    color: #777;
-    font-size: 0.85em;
-    margin-top: -6px;
-    text-align: left;
-}
-
-.browse-filters {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
-}
-
-.browse-filters form {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-start;
-}
-
-.browse-filters label {
-    color: #333;
-    font-weight: 600;
-    font-size: 0.9em;
-}
-
-.browse-filters select {
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 1em;
-    min-width: 220px;
-    background: white;
-}
-
-.pagination {
-    align-items: center;
-    display: flex;
-    gap: 15px;
-    justify-content: center;
     margin-top: 30px;
 }
 
-.pagination a {
-    background-color: #667eea;
-    border-radius: 6px;
+.recipe-links a {
+    background: #ff9f68;
+
     color: white;
-    padding: 8px 16px;
+
     text-decoration: none;
+
+    font-weight: 600;
+
+    padding: 11px 20px;
+
+    border-radius: 25px;
+
+    transition: all 0.25s ease;
 }
 
-.pagination a:hover {
-    background-color: #5568d3;
+.recipe-links a:hover {
+    background: #e97845;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 12px rgba(233, 120, 69, 0.25);
 }
 
-.pagination span {
-    color: #555;
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+#footer {
+    text-align: center;
+
+    color: #92786e;
+
+    padding: 25px;
+
+    margin-top: 20px;
 }
 
-@media (max-width: 700px) {
-    body {
-        padding: 12px;
-    }
+
+/* =========================================
+   MOBILE / TABLET
+   ========================================= */
+
+@media (max-width: 768px) {
 
     nav {
-        align-items: stretch;
+        flex-wrap: wrap;
+
+        padding: 14px 15px;
+
+        gap: 6px;
     }
 
-    .nav-links,
-    .nav-actions {
+    nav a {
+        font-size: 14px;
+
+        padding: 8px 11px;
+    }
+
+    nav form {
         width: 100%;
+
+        margin: 5px 0 0;
+
+        justify-content: center;
     }
 
-    nav a,
-    .welcome-message {
-        padding: 9px 10px;
+    nav input {
+        width: 70%;
+        max-width: 300px;
+    }
+
+    nav button {
+        padding: 10px 16px;
     }
 
     #content {
-        padding: 25px 18px;
+        width: calc(100% - 24px);
+
+        margin: 25px auto;
+
+        padding: 28px 20px;
+
+        border-radius: 18px;
     }
 
     h1 {
-        font-size: 2em;
+        font-size: 2.1rem;
+
+        margin-bottom: 25px;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    li {
+        padding: 17px 18px;
+    }
+
+    .recipe-links {
+        justify-content: center;
     }
 }
-.login-divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 20px 0;
-    color: #777;
-}
 
-.login-divider::before,
-.login-divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: #d6d6d6;
-}
 
-.google-login-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #c7c7c7;
-    border-radius: 4px;
-    background: white;
-    color: #222;
-    font-weight: 600;
-    text-decoration: none;
-    box-sizing: border-box;
-}
+/* =========================================
+   SMALL PHONES
+   ========================================= */
 
-.google-login-button:hover {
-    background: #f5f5f5;
-    color: #222;
+@media (max-width: 480px) {
+
+    nav a {
+        font-size: 13px;
+
+        padding: 7px 9px;
+    }
+
+    nav input {
+        width: 65%;
+    }
+
+    #content {
+        padding: 24px 16px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    li a {
+        font-size: 1rem;
+    }
 }
