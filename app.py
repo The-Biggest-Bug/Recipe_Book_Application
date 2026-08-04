@@ -29,6 +29,11 @@ from database import (
     is_recipe_favorite,
     remove_favorite,
     update_user_password,
+    get_user_recipes,
+    add_user_recipe,
+    get_uploaded_recipe,
+    search_user_recipes_by_name,
+    search_user_recipes_by_ingredients
 )
 from mealdb import (
     MealDBError,
@@ -259,18 +264,35 @@ def search_results_page():
     search_type = get_search_type(request.args.get("search_type"))
 
     try:
+        # Search MealDB API
         if search_type == "name":
-            recipes = search_recipes_by_name(search_text)
+            api_recipes = search_recipes_by_name(search_text)
+            user_recipes = search_user_recipes_by_name(search_text)
         else:
-            recipes = search_recipes_by_ingredients(search_text)
+            api_recipes = search_recipes_by_ingredients(search_text)
+            user_recipes = search_user_recipes_by_ingredients(search_text)
+
         api_error = False
     except MealDBError:
-        recipes = []
+        api_recipes = []
+        user_recipes = []
         api_error = True
 
+    # Convert sqlite3.Row → dict so we can add fields
+    user_recipes = [dict(r) for r in user_recipes]
+
+    # Tag user recipes so templates know they are custom
+    for r in user_recipes:
+        r["is_user_recipe"] = True
+
+    # Combine both sets of results
+    recipes = api_recipes + user_recipes
+
+    # Save search history
     if session.get("user_id") and search_text.strip():
         add_search_history(session["user_id"], search_text, search_type)
 
+    # Pagination
     page = request.args.get("page", 1, type=int) or 1
     page_recipes, page, total_pages = paginate(recipes, page)
 
@@ -544,6 +566,49 @@ def clear_history_page():
     clear_user_search_history(session["user_id"])
     flash("Search history cleared.")
     return redirect(url_for("history_page"))
+
+@app.route("/upload", methods=["GET", "POST"])
+@login_required
+def upload_recipe_page():
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        ingredients = request.form.get("ingredients", "").strip()
+        instructions = request.form.get("instructions", "").strip()
+        image_url = request.form.get("image_url", "").strip()
+
+        if not name or not ingredients or not instructions:
+            flash("Name, ingredients, and instructions are required.")
+            return render_template("upload_recipe.html")
+
+        add_user_recipe(
+            session["user_id"],
+            name,
+            ingredients,
+            instructions,
+            image_url
+        )
+
+        flash("Recipe uploaded successfully!")
+        return redirect(url_for("my_recipes_page"))
+
+    return render_template("upload_recipe.html")
+
+@app.route("/my-recipes")
+@login_required
+def my_recipes_page():
+    recipes = get_user_recipes(session["user_id"])
+    return render_template("my_recipes.html", recipes=recipes)
+
+@app.route("/my-recipes/<int:recipe_id>")
+@login_required
+def uploaded_recipe_detail_page(recipe_id):
+    recipe = get_uploaded_recipe(recipe_id)
+
+    if recipe is None:
+        flash("Recipe not found.")
+        return redirect(url_for("my_recipes_page"))
+
+    return render_template("uploaded_recipe_detail.html", recipe=recipe)
 
 
 init_database()

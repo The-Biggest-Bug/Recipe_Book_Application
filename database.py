@@ -57,6 +57,17 @@ def init_database():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
+
+                CREATE TABLE IF NOT EXISTS user_recipes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            recipe_name TEXT NOT NULL,
+            ingredients TEXT NOT NULL,
+            instructions TEXT NOT NULL,
+            image_url TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        );
         """
     )
     columns = [
@@ -221,3 +232,65 @@ def get_profile_counts(user_id):
         "favorite_count": favorite_count,
         "search_count": search_count
     }
+
+def add_user_recipe(user_id, name, ingredients, instructions, image_url):
+    db = get_db()
+    db.execute(
+        """
+        INSERT INTO user_recipes (user_id, recipe_name, ingredients, instructions, image_url)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (user_id, name, ingredients, instructions, image_url)
+    )
+    db.commit()
+
+def get_user_recipes(user_id):
+    return get_db().execute(
+        """
+        SELECT * FROM user_recipes
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+        """,
+        (user_id,)
+    ).fetchall()
+
+def get_uploaded_recipe(recipe_id):
+    return get_db().execute(
+        """
+        SELECT * FROM user_recipes
+        WHERE id = ?
+        """,
+        (recipe_id,)
+    ).fetchone()
+
+
+def search_user_recipes_by_name(name):
+    return get_db().execute(
+        """
+        SELECT * FROM user_recipes
+        WHERE recipe_name LIKE ?
+        ORDER BY created_at DESC
+        """,
+        (f"%{name}%",)
+    ).fetchall()
+
+
+def search_user_recipes_by_ingredients(ingredient):
+    return get_db().execute(
+        """
+        SELECT * FROM user_recipes
+        WHERE ingredients LIKE ?
+        ORDER BY created_at DESC
+        """,
+        (f"%{ingredient}%",)
+    ).fetchall()
+
+def search_user_recipes_by_ingredients(ingredient):
+    return get_db().execute(
+        """
+        SELECT * FROM user_recipes
+        WHERE ingredients LIKE ?
+        ORDER BY created_at DESC
+        """,
+        (f"%{ingredient}%",)
+    ).fetchall()
