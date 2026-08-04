@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Uploaded Recipes</h2>
+
+{% if recipes %}
+    <ul>
+        {% for r in recipes %}
+            <li>
+                <a href="{{ url_for('uploaded_recipe_detail_page', recipe_id=r['id']) }}">
+                    {{ r['recipe_name'] }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You haven't uploaded any recipes yet.</p>
+{% endif %}
+{% endblock %}
