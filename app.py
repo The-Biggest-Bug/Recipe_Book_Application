@@ -14,6 +14,7 @@ from flask_wtf.csrf import CSRFError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database import (
+    get_db,
     add_favorite,
     add_search_history,
     clear_user_search_history,
@@ -33,8 +34,14 @@ from database import (
     add_user_recipe,
     get_uploaded_recipe,
     search_user_recipes_by_name,
-    search_user_recipes_by_ingredients
+    search_user_recipes_by_ingredients,
+    get_reviews,
+    get_average_rating,
+    add_review,
+    delete_review,
+    update_review
 )
+
 from mealdb import (
     MealDBError,
     get_areas,
@@ -366,17 +373,25 @@ def recipe_detail_page(recipe_id):
             "recipe_detail.html",
             recipe=None,
             ingredients=[],
-            is_favorite=False
+            is_favorite=False,
+            reviews=[],
+            average_rating=None
         )
 
     user_id = session.get("user_id")
     favorite_status = bool(user_id and is_recipe_favorite(user_id, recipe_id))
 
+    
+    reviews = get_reviews(recipe_id, 0)             
+    average_rating = get_average_rating(recipe_id, 0)
+
     return render_template(
         "recipe_detail.html",
         recipe=recipe,
         ingredients=get_recipe_ingredients(recipe),
-        is_favorite=favorite_status
+        is_favorite=favorite_status,
+        reviews=reviews,                 
+        average_rating=average_rating    
     )
 
 
@@ -610,6 +625,52 @@ def uploaded_recipe_detail_page(recipe_id):
 
     return render_template("uploaded_recipe_detail.html", recipe=recipe)
 
+@app.route("/review/<recipe_id>", methods=["POST"])
+def submit_review(recipe_id):
+    rating = int(request.form.get("rating", 0))
+    comment = request.form.get("comment", "").strip()
+    is_user_recipe = int(request.form.get("is_user_recipe", 0))
+
+    add_review(session["user_id"], recipe_id, is_user_recipe, rating, comment)
+
+    if is_user_recipe == 1:
+        return redirect(url_for("uploaded_recipe_detail_page", recipe_id=recipe_id))
+    else:
+        return redirect(url_for("recipe_detail_page", recipe_id=recipe_id))
+
+@app.post("/review/<int:review_id>/delete")
+@login_required
+def delete_review_page(review_id):
+    delete_review(review_id, session["user_id"])
+    flash("Review deleted.")
+    return redirect(request.referrer or url_for("home_page"))
+
+@app.route("/review/<int:review_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_review_page(review_id):
+    # Get the review and ensure it belongs to the logged-in user
+    review = get_db().execute(
+        "SELECT * FROM reviews WHERE id = ? AND user_id = ?",
+        (review_id, session["user_id"])
+    ).fetchone()
+
+    if not review:
+        flash("Review not found or not yours.")
+        return redirect(url_for("home_page"))
+
+    # If the user submitted the form
+    if request.method == "POST":
+        rating = int(request.form.get("rating"))
+        comment = request.form.get("comment", "").strip()
+
+        update_review(review_id, session["user_id"], rating, comment)
+        flash("Review updated!")
+
+        # Redirect back to the correct recipe page
+        return redirect(url_for("recipe_detail_page", recipe_id=review["recipe_id"]))
+
+    # If GET request, show the edit form
+    return render_template("edit_review.html", review=review)
 
 init_database()
 

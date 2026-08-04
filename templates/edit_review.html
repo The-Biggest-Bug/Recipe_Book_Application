@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Edit Review</h1>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <label for="rating">Rating</label>
+    <select name="rating" id="rating" required>
+        <option value="1" {% if review.rating == 1 %}selected{% endif %}>⭐</option>
+        <option value="2" {% if review.rating == 2 %}selected{% endif %}>⭐⭐</option>
+        <option value="3" {% if review.rating == 3 %}selected{% endif %}>⭐⭐⭐</option>
+        <option value="4" {% if review.rating == 4 %}selected{% endif %}>⭐⭐⭐⭐</option>
+        <option value="5" {% if review.rating == 5 %}selected{% endif %}>⭐⭐⭐⭐⭐</option>
+    </select>
+
+    <label for="comment">Comment</label>
+    <textarea name="comment" id="comment">{{ review.comment }}</textarea>
+
+    <button type="submit">Save Changes</button>
+</form>
+{% endblock %}
