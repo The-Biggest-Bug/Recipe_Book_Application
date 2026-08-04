@@ -58,7 +58,7 @@ def init_database():
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
 
-                CREATE TABLE IF NOT EXISTS user_recipes (
+        CREATE TABLE IF NOT EXISTS user_recipes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
             recipe_name TEXT NOT NULL,
@@ -67,6 +67,17 @@ def init_database():
             image_url TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users (id)
+        );
+
+        CREATE TABLE IF NOT EXISTS reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            recipe_id TEXT NOT NULL,
+            is_user_recipe INTEGER NOT NULL DEFAULT 0,
+            rating INTEGER NOT NULL,
+            comment TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
         );
         """
     )
@@ -294,3 +305,71 @@ def search_user_recipes_by_ingredients(ingredient):
         """,
         (f"%{ingredient}%",)
     ).fetchall()
+
+def get_reviews(recipe_id, is_user_recipe):
+    return get_db().execute(
+        """
+        SELECT reviews.*, users.username
+        FROM reviews
+        JOIN users ON reviews.user_id = users.id
+        WHERE recipe_id = ? AND is_user_recipe = ?
+        ORDER BY created_at DESC
+        """,
+        (recipe_id, is_user_recipe)
+    ).fetchall()
+
+
+def get_average_rating(recipe_id, is_user_recipe):
+    row = get_db().execute(
+        """
+        SELECT AVG(rating) AS avg_rating
+        FROM reviews
+        WHERE recipe_id = ? AND is_user_recipe = ?
+        """,
+        (recipe_id, is_user_recipe)
+    ).fetchone()
+
+    return row["avg_rating"] if row else None
+
+
+def add_review(user_id, recipe_id, is_user_recipe, rating, comment):
+    db = get_db()
+    db.execute(
+        """
+        INSERT INTO reviews (user_id, recipe_id, is_user_recipe, rating, comment)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (user_id, recipe_id, is_user_recipe, rating, comment)
+    )
+    db.commit()
+
+def add_review(user_id, recipe_id, is_user_recipe, rating, comment):
+    db = get_db()
+    db.execute(
+        """
+        INSERT INTO reviews (user_id, recipe_id, is_user_recipe, rating, comment)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (user_id, recipe_id, is_user_recipe, rating, comment)
+    )
+    db.commit()
+
+def delete_review(review_id, user_id):
+    db = get_db()
+    db.execute(
+        "DELETE FROM reviews WHERE id = ? AND user_id = ?",
+        (review_id, user_id)
+    )
+    db.commit()
+
+def update_review(review_id, user_id, rating, comment):
+    db = get_db()
+    db.execute(
+        """
+        UPDATE reviews
+        SET rating = ?, comment = ?
+        WHERE id = ? AND user_id = ?
+        """,
+        (rating, comment, review_id, user_id)
+    )
+    db.commit()
