@@ -1,7 +1,9 @@
 from functools import wraps
 import os
 import re
+import secrets
 import sqlite3
+from authlib.integrations.flask_client import OAuth
 
 from dotenv import load_dotenv
 from flask import Flask, flash, redirect, render_template, request, session, url_for
@@ -67,6 +69,21 @@ def resolve_secret_key():
 
 app = Flask(__name__)
 app.secret_key = resolve_secret_key()
+
+oauth = OAuth(app)
+
+google = oauth.register(
+    name="google",
+    client_id=os.getenv("GOOGLE_CLIENT_ID"),
+    client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
+    server_metadata_url=(
+        "https://accounts.google.com/.well-known/openid-configuration"
+    ),
+    client_kwargs={
+        "scope": "openid email profile"
+    },
+)
+
 app.teardown_appcontext(close_db)
 
 csrf = CSRFProtect(app)
@@ -177,6 +194,64 @@ def home_page():
         favorite_ids=get_current_favorite_ids()
     )
 
+@app.get("/auth/google")
+def google_login():
+    redirect_uri = url_for("google_callback", _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+@app.get("/auth/google/callback")
+def google_callback():
+    try:
+        token = google.authorize_access_token()
+        google_user = token.get("userinfo")
+    except Exception:
+        flash("Google sign-in failed. Please try again.")
+        return redirect(url_for("login_page"))
+
+    if not google_user or not google_user.get("email_verified"):
+        flash("Google could not verify your email.")
+        return redirect(url_for("login_page"))
+
+    email = google_user["email"].lower()
+    user = get_user_for_login(email)
+
+    if user is None:
+        base_username = re.sub(
+            r"[^a-zA-Z0-9_]",
+            "",
+            email.split("@")[0]
+        ) or "google_user"
+
+        username = base_username
+        number = 1
+
+        while get_user_for_login(username) is not None:
+            username = f"{base_username}{number}"
+            number += 1
+
+        random_password = secrets.token_urlsafe(32)
+
+        try:
+            create_user(
+                username,
+                email,
+                generate_password_hash(random_password)
+            )
+        except sqlite3.IntegrityError:
+            pass
+
+        user = get_user_for_login(email)
+
+    if user is None:
+        flash("Your Google account could not be created.")
+        return redirect(url_for("login_page"))
+
+    session.clear()
+    session["user_id"] = user["id"]
+    session["username"] = user["username"]
+
+    flash(f"Welcome, {user['username']}!")
+    return redirect(url_for("home_page"))
 
 @app.route("/search-results", methods=["GET"])
 def search_results_page():
