@@ -1,25 +1,30 @@
 {% extends "base.html" %}
+{% from "_recipe_card.html" import recipe_card with context %}
 
 {% block title %}Recipe Book{% endblock %}
-
-{% block bar %}
-<nav>
-    <a href ="{{ url_for('home_page') }}">Home Page</a>
-    <a href ="{{ url_for('history_page') }}">History Page</a>
-    <a href ="{{ url_for('favorites_page') }}">Favorite Recipes</a>
-    <form action="#">
-        <input type="text" placeholder="Search">
-        
-        <!--create page for search results-->
-        <button onclick="">
-            <p>Search<p>
-        </button>
-    </form>
-</nav>
-{% endblock %}
 
 {% block content %}
 
 <h1>New Recipes</h1>
+
+{% if recipes %}
+    <div class="recipe-grid">
+        {% for recipe in recipes %}
+            {{ recipe_card(
+                recipe.idMeal,
+                recipe.strMeal,
+                recipe.strMealThumb,
+                recipe.strCategory,
+                recipe.strArea,
+                is_favorite=recipe.idMeal in favorite_ids,
+                next_url=request.path
+            ) }}
+        {% endfor %}
+    </div>
+{% elif api_error %}
+    <p class="empty-state">New recipes are unavailable right now. Please try again soon.</p>
+{% else %}
+    <p class="empty-state">No new recipes are available right now.</p>
+{% endif %}
 
 {% endblock %}
