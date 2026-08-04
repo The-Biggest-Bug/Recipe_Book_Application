@@ -1,17 +1,28 @@
 {% extends "base.html" %}
+{% from "_recipe_card.html" import recipe_card with context %}
 
 {% block title %}Recipe Book{% endblock %}
-
-{% block bar %}
-<nav>
-    <a href ="{{ url_for('home_page') }}">Home Page</a>
-    <a href ="{{ url_for('new_arrivals_page') }}">New Recipe Page</a>
-    <a href ="{{ url_for('history_page') }}">History Page</a>
-</nav>
-{% endblock %}
 
 {% block content %}
 
 <h1>Favorites</h1>
+
+{% if favorites %}
+    <div class="recipe-grid">
+        {% for favorite in favorites %}
+            {{ recipe_card(
+                favorite.recipe_id,
+                favorite.recipe_name,
+                favorite.thumbnail,
+                favorite.category,
+                favorite.area,
+                is_favorite=True,
+                next_url=request.path
+            ) }}
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="empty-state">Your saved recipes will appear here.</p>
+{% endif %}
 
 {% endblock %}

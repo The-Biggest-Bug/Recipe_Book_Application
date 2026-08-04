@@ -1,0 +1,33 @@
+{% macro recipe_card(recipe_id, name, thumbnail, category, area, is_favorite=False, show_favorite_action=True, next_url=None) %}
+<article class="recipe-card">
+    {% if thumbnail %}
+        <img src="{{ thumbnail }}" alt="{{ name }}">
+    {% endif %}
+    <div class="recipe-card-content">
+        <h2>{{ name }}</h2>
+        <p>
+            {% if category %}{{ category }}{% endif %}
+            {% if category and area %} &middot; {% endif %}
+            {% if area %}{{ area }}{% endif %}
+        </p>
+        <div class="card-actions">
+            <a href="{{ url_for('recipe_detail_page', recipe_id=recipe_id) }}">View Recipe</a>
+            {% if show_favorite_action and current_user %}
+                {% if is_favorite %}
+                    <form action="{{ url_for('remove_favorite_page', recipe_id=recipe_id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+                        <button class="secondary-button" type="submit">Remove Favorite</button>
+                    </form>
+                {% else %}
+                    <form action="{{ url_for('add_favorite_page', recipe_id=recipe_id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+                        <button type="submit">Save Favorite</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</article>
+{% endmacro %}
