@@ -474,3 +474,38 @@ h2 {
         font-size: 2em;
     }
 }
+.login-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: #777;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #d6d6d6;
+}
+
+.google-login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #c7c7c7;
+    border-radius: 4px;
+    background: white;
+    color: #222;
+    font-weight: 600;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.google-login-button:hover {
+    background: #f5f5f5;
+    color: #222;
+}
