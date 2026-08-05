@@ -47,16 +47,14 @@
         {% for recipe in recipes %}
 
             {% if recipe.is_user_recipe %}
-                <!-- USER-UPLOADED RECIPE CARD -->
                 <div class="recipe-card">
                     <a href="{{ url_for('uploaded_recipe_detail_page', recipe_id=recipe['id']) }}">
-                        <img src="{{ recipe['image_url'] or url_for('static', filename='default.png') }}" alt="Recipe Image">
-                        <h3>{{ recipe['recipe_name'] }} (Your Recipe)</h3>
+                        <img src="{{ recipe['image_url'] or url_for('static', filename='default.png') }}" alt="{{ recipe['recipe_name'] }}">
+                        <h3>{{ recipe['recipe_name'] }}</h3>
                     </a>
                 </div>
 
             {% else %}
-                <!-- MEALDB RECIPE CARD -->
                 {{ recipe_card(
                     recipe.idMeal,
                     recipe.strMeal,
@@ -85,9 +83,9 @@
     {% endif %}
 
 {% elif api_error %}
-    <p class="empty-state">No recipes were found for that search, or the recipe service is unavailable.</p>
+    <p class="empty-state">No recipes found. Try a different search.</p>
 {% else %}
-    <p class="empty-state">Enter a recipe name or ingredients to search for recipes.</p>
+    <p class="empty-state">Search by recipe name or ingredients to get started.</p>
 {% endif %}
 
 {% endblock %}

@@ -296,16 +296,6 @@ def search_user_recipes_by_ingredients(ingredient):
         (f"%{ingredient}%",)
     ).fetchall()
 
-def search_user_recipes_by_ingredients(ingredient):
-    return get_db().execute(
-        """
-        SELECT * FROM user_recipes
-        WHERE ingredients LIKE ?
-        ORDER BY created_at DESC
-        """,
-        (f"%{ingredient}%",)
-    ).fetchall()
-
 def get_reviews(recipe_id, is_user_recipe):
     return get_db().execute(
         """
@@ -331,17 +321,6 @@ def get_average_rating(recipe_id, is_user_recipe):
 
     return row["avg_rating"] if row else None
 
-
-def add_review(user_id, recipe_id, is_user_recipe, rating, comment):
-    db = get_db()
-    db.execute(
-        """
-        INSERT INTO reviews (user_id, recipe_id, is_user_recipe, rating, comment)
-        VALUES (?, ?, ?, ?, ?)
-        """,
-        (user_id, recipe_id, is_user_recipe, rating, comment)
-    )
-    db.commit()
 
 def add_review(user_id, recipe_id, is_user_recipe, rating, comment):
     db = get_db()

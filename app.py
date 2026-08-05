@@ -271,7 +271,6 @@ def search_results_page():
     search_type = get_search_type(request.args.get("search_type"))
 
     try:
-        # Search MealDB API
         if search_type == "name":
             api_recipes = search_recipes_by_name(search_text)
             user_recipes = search_user_recipes_by_name(search_text)
@@ -285,21 +284,16 @@ def search_results_page():
         user_recipes = []
         api_error = True
 
-    # Convert sqlite3.Row → dict so we can add fields
     user_recipes = [dict(r) for r in user_recipes]
 
-    # Tag user recipes so templates know they are custom
     for r in user_recipes:
         r["is_user_recipe"] = True
 
-    # Combine both sets of results
     recipes = api_recipes + user_recipes
 
-    # Save search history
     if session.get("user_id") and search_text.strip():
         add_search_history(session["user_id"], search_text, search_type)
 
-    # Pagination
     page = request.args.get("page", 1, type=int) or 1
     page_recipes, page, total_pages = paginate(recipes, page)
 
@@ -365,7 +359,7 @@ def recipe_detail_page(recipe_id):
     try:
         recipe = get_recipe_by_id(recipe_id)
     except MealDBError:
-        flash("The recipe service is unavailable right now. Please try again soon.")
+        flash("We could not load this recipe right now. Please try again soon.")
         recipe = None
 
     if recipe is None:
@@ -518,7 +512,7 @@ def add_favorite_page(recipe_id):
     try:
         recipe = get_recipe_by_id(recipe_id)
     except MealDBError:
-        flash("The recipe service is unavailable right now. Please try again soon.")
+        flash("We could not load this recipe right now. Please try again soon.")
         recipe = None
 
     if recipe is None:
@@ -648,7 +642,6 @@ def delete_review_page(review_id):
 @app.route("/review/<int:review_id>/edit", methods=["GET", "POST"])
 @login_required
 def edit_review_page(review_id):
-    # Get the review and ensure it belongs to the logged-in user
     review = get_db().execute(
         "SELECT * FROM reviews WHERE id = ? AND user_id = ?",
         (review_id, session["user_id"])
@@ -658,7 +651,6 @@ def edit_review_page(review_id):
         flash("Review not found or not yours.")
         return redirect(url_for("home_page"))
 
-    # If the user submitted the form
     if request.method == "POST":
         rating = int(request.form.get("rating"))
         comment = request.form.get("comment", "").strip()
@@ -666,10 +658,8 @@ def edit_review_page(review_id):
         update_review(review_id, session["user_id"], rating, comment)
         flash("Review updated!")
 
-        # Redirect back to the correct recipe page
         return redirect(url_for("recipe_detail_page", recipe_id=review["recipe_id"]))
 
-    # If GET request, show the edit form
     return render_template("edit_review.html", review=review)
 
 init_database()
