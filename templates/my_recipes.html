@@ -3,16 +3,35 @@
 {% block content %}
 <h1>My Uploaded Recipes</h1>
 
+<div class="recipe-actions">
+    <a class="secondary-button" href="{{ url_for('upload_recipe_page') }}">Upload Recipe</a>
+</div>
+
 {% if recipes %}
-    <ul>
+    <div class="recipe-grid">
         {% for r in recipes %}
-            <li>
-                <a href="{{ url_for('uploaded_recipe_detail_page', recipe_id=r['id']) }}">
-                    {{ r['recipe_name'] }}
-                </a>
-            </li>
+            <article class="recipe-card">
+                {% if r['image_url'] %}
+                    <img src="{{ r['image_url'] }}" alt="{{ r['recipe_name'] }}" loading="lazy">
+                {% else %}
+                    <div class="recipe-thumb-placeholder" aria-hidden="true">🍽️</div>
+                {% endif %}
+                <div class="recipe-card-content">
+                    <h2>{{ r['recipe_name'] }}</h2>
+                    <div class="badge-row">
+                        <span class="badge">My Recipe</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="{{ url_for('uploaded_recipe_detail_page', recipe_id=r['id']) }}">View Recipe</a>
+                        <form method="POST" action="{{ url_for('delete_user_recipe_page', recipe_id=r['id']) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="secondary-button danger-button" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </article>
         {% endfor %}
-    </ul>
+    </div>
 {% else %}
     <p class="empty-state">You haven't uploaded any recipes yet.</p>
 {% endif %}

@@ -275,6 +275,15 @@ def get_uploaded_recipe(recipe_id):
     ).fetchone()
 
 
+def delete_user_recipe(recipe_id, user_id):
+    db = get_db()
+    db.execute(
+        "DELETE FROM user_recipes WHERE id = ? AND user_id = ?",
+        (recipe_id, user_id)
+    )
+    db.commit()
+
+
 def search_user_recipes_by_name(name):
     return get_db().execute(
         """
