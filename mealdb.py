@@ -1,3 +1,4 @@
+import logging
 import time
 
 import requests
@@ -5,16 +6,19 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 
+logger = logging.getLogger(__name__)
+
 BASE_URL = "https://www.themealdb.com/api/json/v1/1"
 REQUEST_TIMEOUT = 8
 CACHE_TTL_SECONDS = 300
 
 _session = requests.Session()
 _retries = Retry(
-    total=2,
-    backoff_factor=0.5,
+    total=4,
+    backoff_factor=1,
     status_forcelist=[429, 500, 502, 503, 504],
-    allowed_methods=["GET"]
+    allowed_methods=["GET"],
+    respect_retry_after_header=True
 )
 _session.mount("https://", HTTPAdapter(max_retries=_retries))
 _session.mount("http://", HTTPAdapter(max_retries=_retries))
@@ -39,10 +43,14 @@ def _cache_get(key):
     expires_at, value = entry
 
     if time.time() >= expires_at:
-        del _response_cache[key]
         return None
 
     return value
+
+
+def _cache_get_stale(key):
+    entry = _response_cache.get(key)
+    return entry[1] if entry is not None else None
 
 
 def _cache_set(key, value):
@@ -66,6 +74,17 @@ def fetch_mealdb(endpoint, params=None, cacheable=True):
         response.raise_for_status()
         data = response.json()
     except (requests.RequestException, ValueError) as exc:
+        logger.warning(
+            "TheMealDB request failed for endpoint=%s params=%s: %s",
+            endpoint, params, exc
+        )
+
+        if cacheable:
+            stale = _cache_get_stale(key)
+            if stale is not None:
+                logger.info("Serving stale cached response for endpoint=%s params=%s", endpoint, params)
+                return stale
+
         raise MealDBError(f"TheMealDB request failed: {exc}") from exc
 
     if cacheable:

@@ -193,6 +193,7 @@ def home_page():
         recipes = get_default_recipes()
         api_error = False
     except MealDBError:
+        app.logger.exception("MealDB request failed")
         recipes = []
         api_error = True
 
@@ -280,6 +281,7 @@ def search_results_page():
 
         api_error = False
     except MealDBError:
+        app.logger.exception("MealDB request failed")
         api_recipes = []
         user_recipes = []
         api_error = True
@@ -320,6 +322,7 @@ def browse_page():
         categories = get_categories()
         areas = get_areas()
     except MealDBError:
+        app.logger.exception("MealDB request failed")
         categories, areas = [], []
         api_error = True
 
@@ -329,11 +332,13 @@ def browse_page():
         try:
             recipes = get_recipes_by_category(category)
         except MealDBError:
+            app.logger.exception("MealDB request failed")
             api_error = True
     elif area:
         try:
             recipes = get_recipes_by_area(area)
         except MealDBError:
+            app.logger.exception("MealDB request failed")
             api_error = True
 
     page = request.args.get("page", 1, type=int) or 1
@@ -359,6 +364,7 @@ def recipe_detail_page(recipe_id):
     try:
         recipe = get_recipe_by_id(recipe_id)
     except MealDBError:
+        app.logger.exception("MealDB request failed")
         flash("We could not load this recipe right now. Please try again soon.")
         recipe = None
 
@@ -512,6 +518,7 @@ def add_favorite_page(recipe_id):
     try:
         recipe = get_recipe_by_id(recipe_id)
     except MealDBError:
+        app.logger.exception("MealDB request failed")
         flash("We could not load this recipe right now. Please try again soon.")
         recipe = None
 
@@ -551,6 +558,7 @@ def new_arrivals_page():
         recipes = get_random_recipes()
         api_error = False
     except MealDBError:
+        app.logger.exception("MealDB request failed")
         recipes = []
         api_error = True
 
