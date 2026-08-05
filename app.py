@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import wraps
 import os
 import re
@@ -140,7 +141,7 @@ def get_current_favorite_ids():
 
 @app.context_processor
 def inject_current_user():
-    return {"current_user": get_current_user()}
+    return {"current_user": get_current_user(), "current_year": datetime.now().year}
 
 
 def is_safe_redirect(next_page):

@@ -1,15 +1,17 @@
 {% extends "base.html" %}
+{% block title %}{{ recipe['recipe_name'] }}{% endblock %}
 {% block content %}
-<h2>{{ recipe['recipe_name'] }}</h2>
+<h1>{{ recipe['recipe_name'] }}</h1>
 
-{% if recipe['image_url'] %}
-    <img src="{{ recipe['image_url'] }}" alt="Recipe image" style="max-width:300px;">
-{% endif %}
+<div class="recipe-details">
+    {% if recipe['image_url'] %}
+        <img class="recipe-image" src="{{ recipe['image_url'] }}" alt="Recipe image">
+    {% endif %}
 
-<h3>Ingredients</h3>
-<pre>{{ recipe['ingredients'] }}</pre>
+    <h2>Ingredients</h2>
+    <pre>{{ recipe['ingredients'] }}</pre>
 
-<h3>Instructions</h3>
-<pre>{{ recipe['instructions'] }}</pre>
-
+    <h2>Instructions</h2>
+    <pre>{{ recipe['instructions'] }}</pre>
+</div>
 {% endblock %}

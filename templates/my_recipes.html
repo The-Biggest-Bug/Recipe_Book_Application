@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% block title %}My Recipes{% endblock %}
 {% block content %}
-<h2>My Uploaded Recipes</h2>
+<h1>My Uploaded Recipes</h1>
 
 {% if recipes %}
     <ul>
@@ -13,6 +14,6 @@
         {% endfor %}
     </ul>
 {% else %}
-    <p>You haven't uploaded any recipes yet.</p>
+    <p class="empty-state">You haven't uploaded any recipes yet.</p>
 {% endif %}
 {% endblock %}

@@ -47,12 +47,21 @@
         {% for recipe in recipes %}
 
             {% if recipe.is_user_recipe %}
-                <div class="recipe-card">
-                    <a href="{{ url_for('uploaded_recipe_detail_page', recipe_id=recipe['id']) }}">
-                        <img src="{{ recipe['image_url'] or url_for('static', filename='default.png') }}" alt="{{ recipe['recipe_name'] }}">
-                        <h3>{{ recipe['recipe_name'] }}</h3>
+                <article class="recipe-card">
+                    <a class="recipe-card-link" href="{{ url_for('uploaded_recipe_detail_page', recipe_id=recipe['id']) }}">
+                        {% if recipe['image_url'] %}
+                            <img src="{{ recipe['image_url'] }}" alt="{{ recipe['recipe_name'] }}" loading="lazy">
+                        {% else %}
+                            <div class="recipe-thumb-placeholder" aria-hidden="true">🍽️</div>
+                        {% endif %}
+                        <div class="recipe-card-content">
+                            <h2>{{ recipe['recipe_name'] }}</h2>
+                            <div class="badge-row">
+                                <span class="badge">My Recipe</span>
+                            </div>
+                        </div>
                     </a>
-                </div>
+                </article>
 
             {% else %}
                 {{ recipe_card(

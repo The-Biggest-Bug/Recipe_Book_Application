@@ -1,39 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+
     {% block head %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.85em' font-size='84'>🍲</text></svg>">
+    <title>{% block title %}{% endblock %} &middot; Recipe Book</title>
     {% endblock %}
 </head>
 <body>
-    <div id="bar">
+    <header id="bar">
         <nav>
+            <a class="brand" href="{{ url_for('home_page') }}">
+                <span class="brand-icon" aria-hidden="true">🍲</span>
+                <span class="brand-name">Recipe Book</span>
+            </a>
+
             <div class="nav-links">
-                <a href="{{ url_for('home_page') }}">Home</a>
-                <a href="{{ url_for('browse_page') }}">Browse</a>
-                <a href="{{ url_for('history_page') }}">History</a>
-                <a href="{{ url_for('favorites_page') }}">Favorites</a>
-                <a href="{{ url_for('new_arrivals_page') }}">New Recipes</a>
-                <a href="{{ url_for('upload_recipe_page') }}">Upload Recipe</a>
-                <a href="{{ url_for('my_recipes_page') }}">My Recipes</a>
+                <a href="{{ url_for('home_page') }}" {% if request.endpoint == "home_page" %}class="active"{% endif %}>Home</a>
+                <a href="{{ url_for('browse_page') }}" {% if request.endpoint == "browse_page" %}class="active"{% endif %}>Browse</a>
+                <a href="{{ url_for('history_page') }}" {% if request.endpoint == "history_page" %}class="active"{% endif %}>History</a>
+                <a href="{{ url_for('favorites_page') }}" {% if request.endpoint == "favorites_page" %}class="active"{% endif %}>Favorites</a>
+                <a href="{{ url_for('new_arrivals_page') }}" {% if request.endpoint == "new_arrivals_page" %}class="active"{% endif %}>New Recipes</a>
+                <a href="{{ url_for('upload_recipe_page') }}" {% if request.endpoint == "upload_recipe_page" %}class="active"{% endif %}>Upload Recipe</a>
+                <a href="{{ url_for('my_recipes_page') }}" {% if request.endpoint == "my_recipes_page" %}class="active"{% endif %}>My Recipes</a>
             </div>
 
             <div class="nav-actions">
                 {% if current_user %}
-                    <a href="{{ url_for('profile_page') }}">Profile</a>
-                    <span class="welcome-message">Signed in as {{ current_user.username }}</span>
+                    <a href="{{ url_for('profile_page') }}" {% if request.endpoint == "profile_page" %}class="active"{% endif %}>Profile</a>
+                    <span class="welcome-message">Hi, {{ current_user.username }}</span>
                     <a href="{{ url_for('logout_page') }}">Log Out</a>
                 {% else %}
                     <a href="{{ url_for('login_page') }}">Log In</a>
-                    <a href="{{ url_for('register_page') }}">Register</a>
+                    <a class="nav-cta" href="{{ url_for('register_page') }}">Register</a>
                 {% endif %}
             </div>
         </nav>
-    </div>
+    </header>
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -45,7 +51,16 @@
         {% endif %}
     {% endwith %}
 
-    <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer">{% block footer %}{% endblock %}</div>
+    <main id="content">{% block content %}{% endblock %}</main>
+
+    <footer id="footer">
+        {% block footer %}
+            <p class="footer-brand">🍲 Recipe Book</p>
+            <p class="footer-meta">
+                Recipe data from <a href="https://www.themealdb.com/" target="_blank" rel="noopener">TheMealDB</a>
+                &middot; &copy; {{ current_year }}
+            </p>
+        {% endblock %}
+    </footer>
 </body>
 </html>
