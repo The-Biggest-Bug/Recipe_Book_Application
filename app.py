@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import wraps
 import os
 import re
@@ -33,6 +34,7 @@ from database import (
     get_user_recipes,
     add_user_recipe,
     get_uploaded_recipe,
+    delete_user_recipe,
     search_user_recipes_by_name,
     search_user_recipes_by_ingredients,
     get_reviews,
@@ -140,7 +142,7 @@ def get_current_favorite_ids():
 
 @app.context_processor
 def inject_current_user():
-    return {"current_user": get_current_user()}
+    return {"current_user": get_current_user(), "current_year": datetime.now().year}
 
 
 def is_safe_redirect(next_page):
@@ -626,6 +628,13 @@ def uploaded_recipe_detail_page(recipe_id):
         return redirect(url_for("my_recipes_page"))
 
     return render_template("uploaded_recipe_detail.html", recipe=recipe)
+
+@app.post("/my-recipes/<int:recipe_id>/delete")
+@login_required
+def delete_user_recipe_page(recipe_id):
+    delete_user_recipe(recipe_id, session["user_id"])
+    flash("Recipe deleted.")
+    return redirect(url_for("my_recipes_page"))
 
 @app.route("/review/<recipe_id>", methods=["POST"])
 def submit_review(recipe_id):

@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
+{% block title %}Edit Review{% endblock %}
+
 {% block content %}
 <h1>Edit Review</h1>
 
-<form method="POST">
+<form class="form-container" method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
     <label for="rating">Rating</label>
